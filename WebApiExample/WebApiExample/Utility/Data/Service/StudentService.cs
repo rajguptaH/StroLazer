@@ -20,14 +20,16 @@ namespace WebApiCrud.Utility.Data.Service
            
             con.Execute(@"update [Student] set
                                 IsDeleted = 1
-                          where Id = @Id", new {id});
+                          where Id = @id", new {id});
             return true;
         }
 
         public List<StudentModel> Get()
         {
             using IDbConnection con = _connectionBuilder.GetConnection;
+
             return con.Query<StudentModel>(@"select * From  [Student] where IsDeleted = 0").ToList();
+
         }
 
         public StudentModel Get(int id)
@@ -48,13 +50,15 @@ namespace WebApiCrud.Utility.Data.Service
 
         public bool Update(StudentModel uiPageTypeModel)
         {
-            using IDbConnection con = _connectionBuilder.GetConnection;
-            con.Execute(@"update [Student] Set  
+            var query = @"update [Student] Set  
                                 Name = @Name,
                                 Class = @Class,
                                 RollNo = @RollNo,
                                 Address = @Address
-                          where Id = @Id", uiPageTypeModel);
+                          where Id = @Id";
+
+			using IDbConnection con = _connectionBuilder.GetConnection;
+            con.Execute(query, uiPageTypeModel);
             return true;
         }
     }

@@ -18,10 +18,9 @@ namespace WebApiCrud.Library.Connection
             {
                 {
                   
-                      // var connectionString = "Server=localhost;Database=Maui; User ID=sa;Password=admin;";
+                    
                     try
                     {
-                        
                         SqlConnection connection = new SqlConnection(_configuration["ConnectionStrings:Prop"]);
                         return connection;
                     }
