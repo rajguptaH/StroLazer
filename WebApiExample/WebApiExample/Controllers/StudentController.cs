@@ -50,7 +50,7 @@ namespace WebApiCrud.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("UpdateStudent")]
+        [HttpPut("UpdateStudent")]
         public IActionResult UpdateStudent([FromBody] StudentModel studentModel)
         {
             try
@@ -63,7 +63,7 @@ namespace WebApiCrud.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("Delete/{Id}")]
         public IActionResult Delete(int id)
         {
             try
