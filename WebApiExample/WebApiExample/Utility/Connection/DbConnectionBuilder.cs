@@ -6,11 +6,11 @@ namespace WebApiCrud.Library.Connection
 {
 
     public class ConnectionBuilder : IConnectionBuilder 
-    { 
-
-        public ConnectionBuilder()
+    {
+        private readonly IConfiguration _configuration;
+        public ConnectionBuilder(IConfiguration configuration)
         {
-          
+          _configuration = configuration;
         }
         public IDbConnection GetConnection
         {
@@ -18,10 +18,11 @@ namespace WebApiCrud.Library.Connection
             {
                 {
                   
-                        var connectionString = "Server=localhost;Database=Maui; User ID=sa;Password=admin;";
+                      // var connectionString = "Server=localhost;Database=Maui; User ID=sa;Password=admin;";
                     try
                     {
-                        SqlConnection connection = new SqlConnection(connectionString);
+                        
+                        SqlConnection connection = new SqlConnection(_configuration["ConnectionStrings:Prop"]);
                         return connection;
                     }
                     catch (Exception ex)
