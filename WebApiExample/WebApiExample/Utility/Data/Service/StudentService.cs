@@ -1,65 +1,53 @@
-﻿using WebApiCrud.Library.Connection.Interface;
-using WebApiCrud.Utility.Data.Service.Interface;
+﻿using WebApiCrud.Utility.Data.Service.Interface;
 using WebApiCrud.Models;
-using Dapper;
-using System.Data;
+using KeplerCrud.Repository;
 
 namespace WebApiCrud.Utility.Data.Service
 {
     public class StudentService : IStudentService
     {
-        private IConnectionBuilder _connectionBuilder;
-        public StudentService(IConnectionBuilder connectionBuilder) 
+        private readonly IKeplerRepository<StudentModel> _keplerRepository;
+        public StudentService(IKeplerRepository<StudentModel> keplerRepository) 
         { 
-            _connectionBuilder = connectionBuilder; 
+            _keplerRepository = keplerRepository;
         }
 
         public bool Delete(int id)
         {
-            using IDbConnection con = _connectionBuilder.GetConnection;
-           
-            con.Execute(@"update [Student] set
-                                IsDeleted = 1
-                          where Id = @id", new {id});
-            return true;
+           return _keplerRepository.SoftDelete(id);
+          
         }
 
         public List<StudentModel> Get()
         {
-            using IDbConnection con = _connectionBuilder.GetConnection;
-
-            return con.Query<StudentModel>(@"select * From  [Student] where IsDeleted = 0").ToList();
-
+            return _keplerRepository.GetAll(false);
         }
 
         public StudentModel Get(int id)
         {
-            using IDbConnection con = _connectionBuilder.GetConnection;
-            var query = @"select * From [Student] where IsDeleted = 0 AND Id = @id";
-            var ff =  con.Query<StudentModel>(query, new {id = id}).FirstOrDefault();
-            return ff;
+            List<ConditionPair> conditionPairs = new List<ConditionPair>
+            {
+                new ConditionPair() { Value = $"{id}", Where = "Id" }
+            };
+            return _keplerRepository.Get(conditionPairs,true);
         }
 
         public int Insert(StudentModel uiPageTypeModel)
         {
-            using IDbConnection con = _connectionBuilder.GetConnection;
-            var query = @"insert into [Student] (Name,Class,RollNo,Address) values(@Name,@Class,@RollNo,@Address)";
-            con.Execute(query, uiPageTypeModel);
-            return 0;
+            var result = _keplerRepository.Insert(uiPageTypeModel);
+            if (result)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public bool Update(StudentModel uiPageTypeModel)
         {
-            var query = @"update [Student] Set  
-                                Name = @Name,
-                                Class = @Class,
-                                RollNo = @RollNo,
-                                Address = @Address
-                          where Id = @Id";
-
-			using IDbConnection con = _connectionBuilder.GetConnection;
-            con.Execute(query, uiPageTypeModel);
-            return true;
+           return _keplerRepository.Update(uiPageTypeModel);
         }
     }
 }
