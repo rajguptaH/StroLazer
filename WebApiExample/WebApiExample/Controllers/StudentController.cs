@@ -25,11 +25,11 @@ namespace WebApiCrud.Controllers
             return _studentService.Get();
         }
         [HttpGet("GetStudentById/{StudentID}")]
-        public StudentModel Get(int StudentId)
+        public StudentModel Get(int StudentID)
         {
             try
             {
-                var student = _studentService.Get(StudentId);
+                var student = _studentService.Get(StudentID);
                 return student;
             }
             catch (Exception ex)
@@ -64,11 +64,11 @@ namespace WebApiCrud.Controllers
             }
         }
         [HttpDelete("Delete/{Id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int Id)
         {
             try
             {
-                var result = _studentService.Delete(id);
+                var result = _studentService.Delete(Id);
                 return Ok(result);
             }
             catch (Exception ex)
