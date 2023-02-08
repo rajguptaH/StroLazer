@@ -59,7 +59,7 @@ GO
     }
   },
   "ConnectionStrings": {
-    "Prop": "Server=localhost;Database=YouDatabaseName; User ID=sa;Password=admin;"
+    "Value": "Server=localhost;Database=YouDatabaseName; User ID=sa;Password=admin;"
   },
   "AllowedHosts": "*"
 }
