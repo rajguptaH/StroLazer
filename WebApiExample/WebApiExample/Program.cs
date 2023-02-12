@@ -15,8 +15,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddScoped<IKeplerRepository<StudentModel>,KeplerRepository<StudentModel>>();
-builder.Services.AddSingleton<IKeplerConnection,KeplerConnection>();
 builder.Services.AddScoped<IConnectionBuilder, ConnectionBuilder>();
 
 var app = builder.Build();

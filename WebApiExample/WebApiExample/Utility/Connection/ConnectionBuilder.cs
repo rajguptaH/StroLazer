@@ -17,20 +17,15 @@ namespace WebApiCrud.Library.Connection
             get
             {
                 {
-                  
-                    
                     try
                     {
-                        SqlConnection connection = new SqlConnection(_configuration["ConnectionStrings:Prop"]);
+                        SqlConnection connection = new SqlConnection(_configuration["ConnectionStrings:Value"]);
                         return connection;
                     }
                     catch (Exception ex)
                     {
                         return null;
                     }
-                    
-                    
-                    
                 }
             }
         }
