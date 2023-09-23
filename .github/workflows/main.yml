@@ -1,0 +1,53 @@
+name: AWS Elastic Beanstalk Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version:  6.0 # Use the desired .NET Core version
+
+    - name: Build and Publish
+      run: |
+        dotnet restore
+        dotnet publish --configuration Release --output ./publish
+
+    - name: Archive Application
+      run: |
+        zip -r application.zip ./publish
+
+    - name: Deploy to Elastic Beanstalk
+      uses: aws-actions/aws-elastic-beanstalk-deploy@v1
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: "YourApplicationName"
+        environment_name: "YourEnvironmentName"
+        region: "us-east-1" # Specify the AWS region
+
+        # You can customize other deployment options as needed, e.g., version_label, description, etc.
+    - name: Deploy Database Project
+      run: |
+        # Deploy your SQL Server Database Project using sqlpackage or another deployment tool.
+        # Example:
+         sqlpackage.exe /Action:Publish /SourceFile:./WebApiExample/WebApiCrud.DB/bin/debug.dacpac /Profile:./MyDatabase.publish.xml
+
+    - name: Run Seed Script
+      run: |
+        # Run your seed script to populate the initial data.
+        # Example (assuming SQL Server):
+        # sqlcmd -S localhost -d YourDatabase -U YourUsername -P YourPassword -i ./seed.sql
+
+    - name: Cleanup
+      run: rm -rf ./publish application.zip
