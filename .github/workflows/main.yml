@@ -31,4 +31,4 @@ jobs:
           application_name: ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }}
           environment_name: ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }}
           version_label: $GITHUB_SHA
-          deployment_package: WebApiExample/WebApiExample/bin/Release/netcoreapp6.0/publish
+          deployment_package: WebApiExample/WebApiExample/publish
