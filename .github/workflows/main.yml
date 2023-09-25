@@ -1,4 +1,4 @@
-name: AWS Elastic Beanstalk Deployment
+name: Deploy to AWS Elastic Beanstalk
 
 on:
   push:
@@ -16,38 +16,23 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version:  6.0 # Use the desired .NET Core version
+        dotnet-version: '5.x' # Adjust the version as needed
 
-    - name: Build and Publish
-      run: |
-        dotnet restore
-        dotnet publish --configuration Release --output ./publish
-
-    - name: Archive Application
-      run: |
-        zip -r application.zip ./publish
+    - name: Build .NET Core Project
+      run: dotnet build --configuration Release
 
     - name: Deploy to Elastic Beanstalk
-      uses: aws-actions/aws-elastic-beanstalk-deploy@v1
-      with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: "YourApplicationName"
-        environment_name: "YourEnvironmentName"
-        region: "us-east-1" # Specify the AWS region
-
-        # You can customize other deployment options as needed, e.g., version_label, description, etc.
-    - name: Deploy Database Project
       run: |
-        # Deploy your SQL Server Database Project using sqlpackage or another deployment tool.
-        # Example:
-         sqlpackage.exe /Action:Publish /SourceFile:./WebApiExample/WebApiCrud.DB/bin/debug.dacpac /Profile:./MyDatabase.publish.xml
-
-    - name: Run Seed Script
-      run: |
-        # Run your seed script to populate the initial data.
-        # Example (assuming SQL Server):
-        # sqlcmd -S localhost -d YourDatabase -U YourUsername -P YourPassword -i ./seed.sql
-
-    - name: Cleanup
-      run: rm -rf ./publish application.zip
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set region ${{ secrets.AWS_REGION }}
+        aws elasticbeanstalk create-application-version \
+          --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
+          --version-label $GITHUB_SHA \
+          --source-bundle S3Bucket="elasticbeanstalk-$AWS_REGION",S3Key=$GITHUB_SHA.zip
+        aws elasticbeanstalk update-environment \
+          --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
+          --environment-name ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }} \
+          --version-label $GITHUB_SHA
+      env:
+        DOTNET_ROOT: ${{ secrets.DOTNET_ROOT }}
