@@ -26,10 +26,7 @@ jobs:
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws configure set region ${{ secrets.AWS_REGION }}
-        aws elasticbeanstalk create-application-version \
-          --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
-          --version-label $GITHUB_SHA \
-          --source-bundle S3Bucket="elasticbeanstalk-$AWS_REGION",S3Key=$GITHUB_SHA.zip
+       
         aws elasticbeanstalk update-environment \
           --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
           --environment-name ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }} \
