@@ -20,8 +20,11 @@ jobs:
 
     - name: Build and Publish
       run: dotnet publish -c Release -o ./publish 
-           zip -r publish.zip publish
+           
       
+      working-directory: ./WebApiExample/WebApiExample
+    - name: Zip File
+      run: zip -r publish.zip publish
       working-directory: ./WebApiExample/WebApiExample
 
     - name: Deploy to Elastic Beanstalk
