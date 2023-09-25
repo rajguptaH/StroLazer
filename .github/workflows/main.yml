@@ -24,8 +24,8 @@ jobs:
       
       working-directory: ./WebApiExample/WebApiExample
     - name: Zip File
-      run: zip -r publish.zip publish
-      working-directory: ./WebApiExample/WebApiExample
+      run: zip -r publish.zip .
+      working-directory: ./WebApiExample/WebApiExample/publish
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v15
@@ -36,4 +36,4 @@ jobs:
           application_name: ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }}
           environment_name: ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }}
           version_label: ${{ github.run_id }}
-          deployment_package: WebApiExample/WebApiExample/publish.zip
+          deployment_package: WebApiExample/WebApiExample/publish/publish.zip
