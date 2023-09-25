@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0' # Adjust the version as needed
+        dotnet-version: '6.0' # Adjust the version as needed # \--source-bundle S3Bucket="elasticbeanstalk-$AWS_REGION",S3Key=$GITHUB_SHA.zip
 
     - name: Build .NET Core Project
       run: dotnet build WebApiExample/WebApiExample/WebApiCrud.csproj --configuration Release
@@ -27,8 +27,13 @@ jobs:
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws configure set region ${{ secrets.AWS_REGION }}
        
+        aws elasticbeanstalk create-application-version \
+          --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
+          --version-label $GITHUB_SHA 
+                             
         aws elasticbeanstalk update-environment \
           --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
-          --environment-name ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }} 
+          --environment-name ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }} \
+          --version-label $GITHUB_SHA
       env:
         DOTNET_ROOT: ${{ secrets.DOTNET_ROOT }}
