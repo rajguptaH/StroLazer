@@ -18,22 +18,17 @@ jobs:
       with:
         dotnet-version: '6.0' # Adjust the version as needed # \--source-bundle S3Bucket="elasticbeanstalk-$AWS_REGION",S3Key=$GITHUB_SHA.zip
 
-    - name: Build .NET Core Project
-      run: dotnet build WebApiExample/WebApiExample/WebApiCrud.csproj --configuration Release
+    - name: Build and Publish
+      run: dotnet publish -c Release -o publish
+      working-directory: ./WebApiExample/WebApiExample
 
     - name: Deploy to Elastic Beanstalk
-      run: |
-        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws configure set region ${{ secrets.AWS_REGION }}
-       
-        aws elasticbeanstalk create-application-version \
-          --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
-          --version-label $GITHUB_SHA 
-                             
-        aws elasticbeanstalk update-environment \
-          --application-name ${{ secrets.AWS_ELASTIC_BEANSTALK_APP_NAME }} \
-          --environment-name ${{ secrets.AWS_ELASTIC_BEANSTALK_ENV_NAME }} \
-          --version-label $GITHUB_SHA
-      env:
-        DOTNET_ROOT: ${{ secrets.DOTNET_ROOT }}
+      uses: einaregilsson/beanstalk-deploy@v15
+      with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+          application_name: AWS_ELASTIC_BEANSTALK_APP_NAME 
+          environment_name: AWS_ELASTIC_BEANSTALK_ENV_NAME 
+          version_label: $GITHUB_SHA
+          deployment_package: publish
