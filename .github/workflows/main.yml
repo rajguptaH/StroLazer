@@ -19,7 +19,7 @@ jobs:
         dotnet-version: '6.0' # Adjust the version as needed # \--source-bundle S3Bucket="elasticbeanstalk-$AWS_REGION",S3Key=$GITHUB_SHA.zip
 
     - name: Build and Publish
-      run: dotnet publish -c Release -o publish \
+      run: dotnet publish -c Release -o ./publish \
            zip -r publish.zip publish
       
       working-directory: ./WebApiExample/WebApiExample
