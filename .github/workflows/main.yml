@@ -19,7 +19,7 @@ jobs:
         dotnet-version: '5.x' # Adjust the version as needed
 
     - name: Build .NET Core Project
-      run: dotnet build --configuration Release
+      run: dotnet build WebApiExample/WebApiExample/WebApiCrud.csproj --configuration Release
 
     - name: Deploy to Elastic Beanstalk
       run: |
