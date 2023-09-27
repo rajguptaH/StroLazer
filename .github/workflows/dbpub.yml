@@ -1,0 +1,29 @@
+name: Database Deployment to AWS RDS
+
+on:
+  push:
+    branches:
+      - main # Adjust the branch as needed
+
+jobs:
+  deploy_database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.x # Use the appropriate .NET Core version
+
+      - name: Build Database Project
+        run: |
+          msbuild YourProjectName.sqlproj /t:Build /p:Configuration=Release
+
+      - name: Deploy to AWS RDS
+        run: |
+          # Replace 'YourProjectName' with your SQL Server Database Project name
+          # Replace 'AwsRdsPublishProfile.publish.xml' with your publish profile file
+          dotnet publish YourProjectName.sqlproj /p:PublishProfile=AwsRdsPublishProfile.publish.xml
