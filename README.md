@@ -76,7 +76,6 @@ GO
 
 MIT
 
-**Free Software, Hell Yeah!**
 -
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=rajguptaH.StroLazer)
 ## Mail Me Or Give a messege In Instagram If You Have Any Suggestion / Questions / Issues or Feel Free To Contribute
